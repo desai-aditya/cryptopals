@@ -77,10 +77,15 @@ fn hex_to_b64(bytes: &[u8]) -> String {
 
 fn main() {
     println!("Hello, world!");
+
+    let c = char::from_u32(0x41).unwrap();
+
+    println!("{}", c);
 }
 
 #[cfg(test)]
 mod tests {
+    // Note this useful idiom: importing names from outer (for mod tests) scope.
     use super::*;
 
     #[test]
@@ -91,6 +96,19 @@ mod tests {
         assert_eq!(mapping(62), Some('+'));
         assert_eq!(mapping(63), Some('/'));
         assert_eq!(mapping(64), None);
+    }
+    #[test]
+    fn test_success_set_1_challenge_1() {
+        let input: &[u8] = &[
+            0x49, 0x27, 0x6d, 0x20, 0x6b, 0x69, 0x6c, 0x6c, 0x69, 0x6e, 0x67, 0x20, 0x79, 0x6f,
+            0x75, 0x72, 0x20, 0x62, 0x72, 0x61, 0x69, 0x6e, 0x20, 0x6c, 0x69, 0x6b, 0x65, 0x20,
+            0x61, 0x20, 0x70, 0x6f, 0x69, 0x73, 0x6f, 0x6e, 0x6f, 0x75, 0x73, 0x20, 0x6d, 0x75,
+            0x73, 0x68, 0x72, 0x6f, 0x6f, 0x6d,
+        ];
+        let output: String =
+            String::from("SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t");
+
+        assert_eq!(hex_to_b64(input), output);
     }
     #[test]
     fn test_success_hex_to_b64() {
