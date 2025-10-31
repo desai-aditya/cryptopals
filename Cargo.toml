@@ -3,4 +3,11 @@ name = "cryptopals"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+path = "src/lib.rs"
+
 [dependencies]
+
+[[bin]]
+name = "s1c1"
+path = "challenges/s1/c1/main.rs"

@@ -1,4 +1,3 @@
-// comment
 // Base 64 encoding docs
 // https://datatracker.ietf.org/doc/html/rfc4648#section-4
 //
@@ -64,7 +63,7 @@ fn process_triplet(bytes: &[u8]) -> String {
     s
 }
 
-fn hex_to_b64(bytes: &[u8]) -> String {
+pub fn hex_to_b64(bytes: &[u8]) -> String {
     let mut b64 = String::new();
     // take triplets of bytes and chunk into 4 pieces of 6bits.
     // then index into mapping and append char to string
@@ -75,8 +74,9 @@ fn hex_to_b64(bytes: &[u8]) -> String {
     b64
 }
 
-fn string_to_hex(s: String) -> Vec<u8> {
+pub fn string_to_hex(s: String) -> Vec<u8> {
     assert!(s.len() & 1 == 0);
+    let v: Vec<u8> = vec![];
 
     (0..(&s).len())
         .step_by(2)
@@ -85,8 +85,8 @@ fn string_to_hex(s: String) -> Vec<u8> {
 }
 
 fn hex_to_string(bytes: &[u8]) -> String {
-    let s: String = bytes.iter().map(|b| format!("{:02x}",b)).collect();
-    assert!(s.len() &1 == 0);
+    let s: String = bytes.iter().map(|b| format!("{:02x}", b)).collect();
+    assert!(s.len() & 1 == 0);
     s
 }
 
@@ -97,14 +97,6 @@ fn hex_xor(bytes1: &[u8], bytes2: &[u8]) -> Vec<u8> {
         v.push(bytes1[i] ^ bytes2[i]);
     }
     v
-}
-
-fn main() {
-    println!("Hello, world!");
-
-    let c = char::from_u32(0x41).unwrap();
-
-    println!("{}", c);
 }
 
 #[cfg(test)]
@@ -120,20 +112,6 @@ mod tests {
         assert_eq!(mapping(62), Some('+'));
         assert_eq!(mapping(63), Some('/'));
         assert_eq!(mapping(64), None);
-    }
-
-    #[test]
-    fn test_success_set_1_challenge_1() {
-        let input: &[u8] = &[
-            0x49, 0x27, 0x6d, 0x20, 0x6b, 0x69, 0x6c, 0x6c, 0x69, 0x6e, 0x67, 0x20, 0x79, 0x6f,
-            0x75, 0x72, 0x20, 0x62, 0x72, 0x61, 0x69, 0x6e, 0x20, 0x6c, 0x69, 0x6b, 0x65, 0x20,
-            0x61, 0x20, 0x70, 0x6f, 0x69, 0x73, 0x6f, 0x6e, 0x6f, 0x75, 0x73, 0x20, 0x6d, 0x75,
-            0x73, 0x68, 0x72, 0x6f, 0x6f, 0x6d,
-        ];
-        let expected: String =
-            String::from("SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t");
-
-        assert_eq!(hex_to_b64(input), expected);
     }
 
     #[test]
@@ -201,7 +179,7 @@ mod tests {
         let e = &[0x41, 0x42];
         assert_eq!(string_to_hex(i), e);
     }
-    
+
     #[test]
     fn test_success_hex_to_string() {
         let i = &[0x41];
