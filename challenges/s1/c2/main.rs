@@ -1,4 +1,5 @@
-use cryptopals::*;
+use cryptopals::hex::*;
+use cryptopals::base64::*;
 use std::fs;
 use std::path::PathBuf;
 
