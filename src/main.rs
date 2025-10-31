@@ -75,6 +75,15 @@ fn hex_to_b64(bytes: &[u8]) -> String {
     b64
 }
 
+fn hex_xor(bytes1: &[u8], bytes2: &[u8]) -> Vec<u8> {
+    let mut v = vec![];
+    assert_eq!(bytes1.len(), bytes2.len());
+    for i in 0..bytes1.len() {
+        v.push(bytes1[i] ^ bytes2[i]);
+    }
+    v
+}
+
 fn main() {
     println!("Hello, world!");
 
@@ -124,4 +133,20 @@ mod tests {
         let output: String = String::from("QUFB");
         assert_eq!(hex_to_b64(input), output);
     }
+
+    #[test]
+    fn test_hex_xor() {
+        let i1: &[u8] = &[0x0];
+        let i2: &[u8] = &[0x1];
+        assert_eq!( hex_xor(i1,i2), &[0x1]);
+
+        let i1: &[u8] = &[0x1];
+        let i2: &[u8] = &[0x1];
+        assert_eq!( hex_xor(i1,i2), &[0x0]);
+
+        let i1: &[u8] = &[0x3];
+        let i2: &[u8] = &[0xf];
+        assert_eq!( hex_xor(i1,i2), &[0xc]);
+     }
+
 }
