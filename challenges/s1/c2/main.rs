@@ -1,5 +1,4 @@
 use cryptopals::hex::*;
-use cryptopals::base64::*;
 use std::fs;
 use std::path::PathBuf;
 
@@ -13,8 +12,6 @@ fn main() {
 
     let input = fs::read_to_string(input).expect("failed to read file");
     let expected = fs::read_to_string(expected).expect("failed to read file");
-
-    let lines: Vec<&str> = input.lines().collect();
 
     let mut input = input.split_whitespace();
 

@@ -1,6 +1,5 @@
 pub fn string_to_hex(s: String) -> Vec<u8> {
     assert!(s.len() & 1 == 0);
-    let v: Vec<u8> = vec![];
 
     (0..(&s).len())
         .step_by(2)
