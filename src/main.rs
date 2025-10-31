@@ -75,6 +75,16 @@ fn hex_to_b64(bytes: &[u8]) -> String {
     b64
 }
 
+fn string_to_hex(s: String) -> Vec<u8> {
+    assert!(s.len() & 1 == 0);
+    let v: Vec<u8> = vec![];
+
+    (0..(&s).len())
+        .step_by(2)
+        .map(|i| u8::from_str_radix(&s[i..i + 2], 16).unwrap())
+        .collect()
+}
+
 fn hex_xor(bytes1: &[u8], bytes2: &[u8]) -> Vec<u8> {
     let mut v = vec![];
     assert_eq!(bytes1.len(), bytes2.len());
@@ -115,48 +125,75 @@ mod tests {
             0x61, 0x20, 0x70, 0x6f, 0x69, 0x73, 0x6f, 0x6e, 0x6f, 0x75, 0x73, 0x20, 0x6d, 0x75,
             0x73, 0x68, 0x72, 0x6f, 0x6f, 0x6d,
         ];
-        let output: String =
+        let expected: String =
             String::from("SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t");
 
-        assert_eq!(hex_to_b64(input), output);
+        assert_eq!(hex_to_b64(input), expected);
     }
 
     #[test]
     fn test_success_hex_to_b64() {
         let input: &[u8] = &[0x41];
-        let output: String = String::from("QQ==");
-        assert_eq!(hex_to_b64(input), output);
+        let expected: String = String::from("QQ==");
+        assert_eq!(hex_to_b64(input), expected);
 
         let input: &[u8] = &[0x41, 0x41];
-        let output: String = String::from("QUE=");
-        assert_eq!(hex_to_b64(input), output);
+        let expected: String = String::from("QUE=");
+        assert_eq!(hex_to_b64(input), expected);
 
         let input: &[u8] = &[0x41, 0x41, 0x41];
-        let output: String = String::from("QUFB");
-        assert_eq!(hex_to_b64(input), output);
+        let expected: String = String::from("QUFB");
+        assert_eq!(hex_to_b64(input), expected);
     }
 
     #[test]
     fn test_hex_xor() {
         let i1: &[u8] = &[0x0];
         let i2: &[u8] = &[0x1];
-        assert_eq!( hex_xor(i1,i2), &[0x1]);
+        assert_eq!(hex_xor(i1, i2), &[0x1]);
 
         let i1: &[u8] = &[0x1];
         let i2: &[u8] = &[0x1];
-        assert_eq!( hex_xor(i1,i2), &[0x0]);
+        assert_eq!(hex_xor(i1, i2), &[0x0]);
 
         let i1: &[u8] = &[0x3];
         let i2: &[u8] = &[0xf];
-        assert_eq!( hex_xor(i1,i2), &[0xc]);
-     }
+        assert_eq!(hex_xor(i1, i2), &[0xc]);
+    }
 
     #[test]
     fn test_success_set_1_challenge_2() {
-        let i1: &[u8] = &[0x1c,0x01,0x11,0x00,0x1f,0x01,0x01,0x00,0x06,0x1a,0x02,0x4b,0x53,0x53,0x50,0x09,0x18,0x1c];
-        let i2: &[u8] = &[0x68,0x69,0x74,0x20,0x74,0x68,0x65,0x20,0x62,0x75,0x6c,0x6c,0x27,0x73,0x20,0x65,0x79,0x65];
-        let o: &[u8] = &[0x74,0x68,0x65,0x20,0x6b,0x69,0x64,0x20,0x64,0x6f,0x6e,0x27,0x74,0x20,0x70,0x6c,0x61,0x79];
+        let i1: &[u8] = &[
+            0x1c, 0x01, 0x11, 0x00, 0x1f, 0x01, 0x01, 0x00, 0x06, 0x1a, 0x02, 0x4b, 0x53, 0x53,
+            0x50, 0x09, 0x18, 0x1c,
+        ];
+        let i2: &[u8] = &[
+            0x68, 0x69, 0x74, 0x20, 0x74, 0x68, 0x65, 0x20, 0x62, 0x75, 0x6c, 0x6c, 0x27, 0x73,
+            0x20, 0x65, 0x79, 0x65,
+        ];
+        let e: &[u8] = &[
+            0x74, 0x68, 0x65, 0x20, 0x6b, 0x69, 0x64, 0x20, 0x64, 0x6f, 0x6e, 0x27, 0x74, 0x20,
+            0x70, 0x6c, 0x61, 0x79,
+        ];
 
-        assert_eq!(hex_xor(i1,i2), o);
+        assert_eq!(hex_xor(i1, i2), e);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_failure_string_to_hex(){
+        let i = String::from("41424");
+        string_to_hex(i);
+    }
+
+    #[test]
+    fn test_success_string_to_hex(){
+        let i = String::from("41");
+        let e = &[0x41];
+        assert_eq!(string_to_hex(i), e);
+
+        let i = String::from("4142");
+        let e = &[0x41,0x42];
+        assert_eq!(string_to_hex(i), e);
     }
 }
