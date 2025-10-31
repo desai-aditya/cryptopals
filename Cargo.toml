@@ -15,3 +15,7 @@ path = "challenges/s1/c1/main.rs"
 [[bin]]
 name = "s1c2"
 path = "challenges/s1/c2/main.rs"
+
+[[bin]]
+name = "s1c3"
+path = "challenges/s1/c3/main.rs"
