@@ -34,6 +34,47 @@ fn mapping(key: u8) -> Option<char> {
         _ => None,
     }
 }
+
+fn process_triplet(bytes: &[u8]) -> String {
+    assert!(bytes.len() > 0);
+    assert!(bytes.len() <= 3);
+    let mut padded_bytes = [0, 0, 0, 0];
+    for i in 0..bytes.len() {
+        padded_bytes[i] = bytes[i];
+    }
+
+    let h0 = (padded_bytes[0] >> 2) & 0x3f;
+    let h1 = ((padded_bytes[0] & 0x3) << 4) | ((padded_bytes[1] >> 4) & 0xf);
+    let h2 = ((padded_bytes[1] & 0xf) << 2) | ((padded_bytes[2] >> 6) & 0x3);
+    let h3 = padded_bytes[2] & 0x3f;
+
+    let h0: char = mapping(h0).unwrap();
+    let h1: char = mapping(h1).unwrap();
+    let h2 = match bytes.len() {
+        1 => '=',
+        2..=3 => mapping(h2).unwrap(),
+        _ => panic!("how can the bytes len be greater than 3"),
+    };
+    let h3 = match bytes.len() {
+        1..=2 => '=',
+        3 => mapping(h3).unwrap(),
+        _ => panic!("how can the bytes len be greater than 3"),
+    };
+    let s: String = [h0, h1, h2, h3].iter().collect();
+    s
+}
+
+fn hex_to_b64(bytes: &[u8]) -> String {
+    let mut b64 = String::new();
+    // take triplets of bytes and chunk into 4 pieces of 6bits.
+    // then index into mapping and append char to string
+    // handle the edgecases for last three
+    for chunk in bytes.chunks(3) {
+        b64 += &process_triplet(chunk);
+    }
+    b64
+}
+
 fn main() {
     println!("Hello, world!");
 }
@@ -41,6 +82,7 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
+
     #[test]
     fn test_success_mapping() {
         assert_eq!(mapping(0), Some('A'));
@@ -49,5 +91,19 @@ mod tests {
         assert_eq!(mapping(62), Some('+'));
         assert_eq!(mapping(63), Some('/'));
         assert_eq!(mapping(64), None);
+    }
+    #[test]
+    fn test_success_hex_to_b64() {
+        let input: &[u8] = &[0x41];
+        let output: String = String::from("QQ==");
+        assert_eq!(hex_to_b64(input), output);
+
+        let input: &[u8] = &[0x41, 0x41];
+        let output: String = String::from("QUE=");
+        assert_eq!(hex_to_b64(input), output);
+
+        let input: &[u8] = &[0x41,0x41, 0x41];
+        let output: String = String::from("QUFB");
+        assert_eq!(hex_to_b64(input), output);
     }
 }
