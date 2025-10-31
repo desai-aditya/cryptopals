@@ -106,6 +106,7 @@ mod tests {
         assert_eq!(mapping(63), Some('/'));
         assert_eq!(mapping(64), None);
     }
+
     #[test]
     fn test_success_set_1_challenge_1() {
         let input: &[u8] = &[
@@ -119,6 +120,7 @@ mod tests {
 
         assert_eq!(hex_to_b64(input), output);
     }
+
     #[test]
     fn test_success_hex_to_b64() {
         let input: &[u8] = &[0x41];
@@ -129,7 +131,7 @@ mod tests {
         let output: String = String::from("QUE=");
         assert_eq!(hex_to_b64(input), output);
 
-        let input: &[u8] = &[0x41,0x41, 0x41];
+        let input: &[u8] = &[0x41, 0x41, 0x41];
         let output: String = String::from("QUFB");
         assert_eq!(hex_to_b64(input), output);
     }
@@ -149,4 +151,12 @@ mod tests {
         assert_eq!( hex_xor(i1,i2), &[0xc]);
      }
 
+    #[test]
+    fn test_success_set_1_challenge_2() {
+        let i1: &[u8] = &[0x1c,0x01,0x11,0x00,0x1f,0x01,0x01,0x00,0x06,0x1a,0x02,0x4b,0x53,0x53,0x50,0x09,0x18,0x1c];
+        let i2: &[u8] = &[0x68,0x69,0x74,0x20,0x74,0x68,0x65,0x20,0x62,0x75,0x6c,0x6c,0x27,0x73,0x20,0x65,0x79,0x65];
+        let o: &[u8] = &[0x74,0x68,0x65,0x20,0x6b,0x69,0x64,0x20,0x64,0x6f,0x6e,0x27,0x74,0x20,0x70,0x6c,0x61,0x79];
+
+        assert_eq!(hex_xor(i1,i2), o);
+    }
 }
