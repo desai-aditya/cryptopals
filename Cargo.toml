@@ -11,3 +11,7 @@ path = "src/lib.rs"
 [[bin]]
 name = "s1c1"
 path = "challenges/s1/c1/main.rs"
+
+[[bin]]
+name = "s1c2"
+path = "challenges/s1/c2/main.rs"

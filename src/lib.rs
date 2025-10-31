@@ -84,13 +84,13 @@ pub fn string_to_hex(s: String) -> Vec<u8> {
         .collect()
 }
 
-fn hex_to_string(bytes: &[u8]) -> String {
+pub fn hex_to_string(bytes: &[u8]) -> String {
     let s: String = bytes.iter().map(|b| format!("{:02x}", b)).collect();
     assert!(s.len() & 1 == 0);
     s
 }
 
-fn hex_xor(bytes1: &[u8], bytes2: &[u8]) -> Vec<u8> {
+pub fn hex_xor(bytes1: &[u8], bytes2: &[u8]) -> Vec<u8> {
     let mut v = vec![];
     assert_eq!(bytes1.len(), bytes2.len());
     for i in 0..bytes1.len() {
@@ -142,24 +142,6 @@ mod tests {
         let i1: &[u8] = &[0x3];
         let i2: &[u8] = &[0xf];
         assert_eq!(hex_xor(i1, i2), &[0xc]);
-    }
-
-    #[test]
-    fn test_success_set_1_challenge_2() {
-        let i1: &[u8] = &[
-            0x1c, 0x01, 0x11, 0x00, 0x1f, 0x01, 0x01, 0x00, 0x06, 0x1a, 0x02, 0x4b, 0x53, 0x53,
-            0x50, 0x09, 0x18, 0x1c,
-        ];
-        let i2: &[u8] = &[
-            0x68, 0x69, 0x74, 0x20, 0x74, 0x68, 0x65, 0x20, 0x62, 0x75, 0x6c, 0x6c, 0x27, 0x73,
-            0x20, 0x65, 0x79, 0x65,
-        ];
-        let e: &[u8] = &[
-            0x74, 0x68, 0x65, 0x20, 0x6b, 0x69, 0x64, 0x20, 0x64, 0x6f, 0x6e, 0x27, 0x74, 0x20,
-            0x70, 0x6c, 0x61, 0x79,
-        ];
-
-        assert_eq!(hex_xor(i1, i2), e);
     }
 
     #[test]
