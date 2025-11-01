@@ -25,7 +25,7 @@ fn main() {
     let i1 = string_to_hex(i1);
     let i2 = string_to_hex(i2);
 
-    let xor = hex_xor(&i1, &i2);
+    let xor = hex_xor_range(&i1, &i2);
     let xor = hex_to_string(&xor);
 
     assert_eq!(xor, expected);

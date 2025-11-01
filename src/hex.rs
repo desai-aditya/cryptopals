@@ -13,11 +13,19 @@ pub fn hex_to_string(bytes: &[u8]) -> String {
     s
 }
 
-pub fn hex_xor(bytes1: &[u8], bytes2: &[u8]) -> Vec<u8> {
+pub fn hex_xor_range(bytes1: &[u8], bytes2: &[u8]) -> Vec<u8> {
     let mut v = vec![];
     assert_eq!(bytes1.len(), bytes2.len());
     for i in 0..bytes1.len() {
         v.push(bytes1[i] ^ bytes2[i]);
+    }
+    v
+}
+
+pub fn hex_xor_byte(bytes: &[u8], byte: u8) -> Vec<u8> {
+    let mut v = vec![];
+    for i in 0..bytes.len() {
+        v.push(bytes[i] ^ byte);
     }
     v
 }
@@ -28,18 +36,25 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_hex_xor() {
+    fn test_hex_xor_range() {
         let i1: &[u8] = &[0x0];
         let i2: &[u8] = &[0x1];
-        assert_eq!(hex_xor(i1, i2), &[0x1]);
+        assert_eq!(hex_xor_range(i1, i2), &[0x1]);
 
         let i1: &[u8] = &[0x1];
         let i2: &[u8] = &[0x1];
-        assert_eq!(hex_xor(i1, i2), &[0x0]);
+        assert_eq!(hex_xor_range(i1, i2), &[0x0]);
 
         let i1: &[u8] = &[0x3];
         let i2: &[u8] = &[0xf];
-        assert_eq!(hex_xor(i1, i2), &[0xc]);
+        assert_eq!(hex_xor_range(i1, i2), &[0xc]);
+    }
+
+    #[test]
+    fn test_hex_xor_byte() {
+        let i1: &[u8] = &[0x0, 0x01, 0x02];
+        let i2: u8 = 0x1;
+        assert_eq!(hex_xor_byte(i1, i2), &[0x1, 0x00, 0x03]);
     }
 
     #[test]
