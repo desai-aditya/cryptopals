@@ -20,7 +20,7 @@ fn main() {
         .join("pride_and_prejudice.txt");
     let corpus = Corpus::new(path);
 
-    let (decrypted_text,_,min_score) = break_xor_cipher(input, &corpus);
+    let (decrypted_text, _, min_score) = break_xor_cipher(input, &corpus);
     println!("Final string is {}", decrypted_text);
     println!("Final score is {}", min_score);
     println!("Yay success!");

@@ -30,6 +30,14 @@ pub fn hex_xor_byte(bytes: &[u8], byte: u8) -> Vec<u8> {
     v
 }
 
+pub fn hex_xor_repeating(text: &[u8], key: &[u8]) -> Vec<u8> {
+    let mut v = vec![];
+    for i in 0..text.len() {
+        v.push(text[i] ^ key[i % key.len()]);
+    }
+    v
+}
+
 #[cfg(test)]
 mod tests {
     // Note this useful idiom: importing names from outer (for mod tests) scope.
@@ -48,6 +56,21 @@ mod tests {
         let i1: &[u8] = &[0x3];
         let i2: &[u8] = &[0xf];
         assert_eq!(hex_xor_range(i1, i2), &[0xc]);
+    }
+
+    #[test]
+    fn test_hex_xor_repeating() {
+        let text: &[u8] = &[0x0, 0x1, 0x2];
+        let key: &[u8] = &[0x1];
+        assert_eq!(hex_xor_repeating(text, key), &[0x1, 0x0, 0x3]);
+
+        let text: &[u8] = &[0x1];
+        let key: &[u8] = &[0x0, 0x1, 0x2];
+        assert_eq!(hex_xor_repeating(text, key), &[0x1]);
+
+        let text: &[u8] = &[0x0, 0x1, 0x2];
+        let key: &[u8] = &[0x0, 0x1, 0x2];
+        assert_eq!(hex_xor_repeating(text, key), &[0x0, 0x0, 0x0]);
     }
 
     #[test]

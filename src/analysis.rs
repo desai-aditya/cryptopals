@@ -12,7 +12,9 @@ fn count_characters(corpus: String) -> HashMap<char, u64> {
 }
 
 fn sanitize_string(s: String) -> String {
-    s.chars().filter(|c| c.is_digit(10)  || *c == ' ' || c.is_ascii_lowercase()).collect()
+    s.chars()
+        .filter(|c| c.is_digit(10) || *c == ' ' || c.is_ascii_lowercase())
+        .collect()
 }
 
 pub fn calculate_character_frequencies(corpus: String) -> HashMap<char, f64> {
