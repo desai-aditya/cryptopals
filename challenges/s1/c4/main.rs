@@ -8,7 +8,7 @@ fn main() {
     let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("challenges")
         .join("s1")
-        .join("c3");
+        .join("c4");
     let input = path.join("input");
 
     let input = fs::read_to_string(input).expect("failed to read file");
@@ -20,8 +20,17 @@ fn main() {
         .join("pride_and_prejudice.txt");
     let corpus = Corpus::new(path);
 
-    let (decrypted_text,_,min_score) = break_xor_cipher(input, &corpus);
+    let mut min_score = f64::MAX;
+    let mut decrypted_text = String::new();
+    for l in input.lines() {
+        let (s, b, score) = break_xor_cipher(l.to_owned(), &corpus);
+        if score < min_score {
+            min_score = score;
+            decrypted_text = s;
+        }
+    }
     println!("Final string is {}", decrypted_text);
     println!("Final score is {}", min_score);
+
     println!("Yay success!");
 }
